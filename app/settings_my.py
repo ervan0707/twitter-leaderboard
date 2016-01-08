@@ -12,10 +12,6 @@ SOCIAL_AUTH_TWITTER_SECRET = ''
 TWITTER_ACCESS_TOKEN = ''
 TWITTER_ACCESS_TOKEN_SECRET = ''
 
-GNIP_USERNAME = ""
-GNIP_PASSWORD = ""
-GNIP_SEARCH_ENDPOINT = ""
-
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
