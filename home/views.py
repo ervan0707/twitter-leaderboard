@@ -26,27 +26,27 @@ def home(request):
 
     # definition of all scorable categories and their point value
     categories = {
-        "tweet_count": float(request.REQUEST.get("tweet_count", 0)),
-        "retweet_count": float(request.REQUEST.get("retweet_count", .05)), 
-        "favorite_count": float(request.REQUEST.get("favorite_count", 0)),
-        "reply_to": float(request.REQUEST.get("reply_to", 2)),
-        "retweets_of": float(request.REQUEST.get("retweets_of", 1))
+        "tweet_count": float(request.GET.get("tweet_count", 0)),
+        "retweet_count": float(request.GET.get("retweet_count", .05)), 
+        "favorite_count": float(request.GET.get("favorite_count", 0)),
+        "reply_to": float(request.GET.get("reply_to", 2)),
+        "retweets_of": float(request.GET.get("retweets_of", 1))
     }
 
     # copy of categories + days setting for configuration    
     settings = copy.deepcopy(categories)
-    settings["days"] = int(request.REQUEST.get("days", 7))
-    settings["refresh"] = int(request.REQUEST.get("refresh", 0))
+    settings["days"] = int(request.GET.get("days", 7))
+    settings["refresh"] = int(request.GET.get("refresh", 0))
     settings["refresh_default"] = 5 * 60 * 1000 
 
     # determine start/end dates
-    end_date = request.REQUEST.get("end_date", None)
+    end_date = request.GET.get("end_date", None)
     if end_date: 
         end_date = Tz.convert_to_utc(end_date, date_format="%Y-%m-%d %H:%M")
     else:
         end_date = datetime.now(pytz.utc)
     
-    start_date = request.REQUEST.get("start_date", None)
+    start_date = request.GET.get("start_date", None)
     if start_date:
         start_date = Tz.convert_to_utc(start_date, date_format="%Y-%m-%d %H:%M")
     else:
@@ -70,9 +70,9 @@ def home(request):
     results = None
     chart = None
  
-    list_id = int(request.REQUEST.get("list", 0))
+    list_id = int(request.GET.get("list", 0))
 
-    list_exclude_id = request.REQUEST.get("list_exclude", 0)
+    list_exclude_id = request.GET.get("list_exclude", 0)
     if list_exclude_id:
         list_exclude_id = int(list_exclude_id)
     else:
@@ -219,7 +219,7 @@ def settings (request):
         profile.twitter_access_token_secret = access_tokens.get('oauth_token_secret', None)
         profile.save()
 
-        profile.timezone = request.REQUEST.get("timezone", None)
+        profile.timezone = request.POST.get("timezone", None)
         profile.save()
         
         success_msg = "Saved."

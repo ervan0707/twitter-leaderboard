@@ -35,17 +35,16 @@ INSTALLED_APPS = (
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'djangosecure',
     'social.apps.django_app.default',
-    'south',
     'app',
-    'home',
     'services',
+    'home',
     'tags',
 )
 
 MIDDLEWARE_CLASSES = (
-    'djangosecure.middleware.SecurityMiddleware',
+    'services.middleware.SSLMiddleware',
+    'django.middleware.security.SecurityMiddleware',
     'csp.middleware.CSPMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -87,6 +86,14 @@ DATABASES = {
     'default': dj_database_url.config(default='sqlite://twitter-leaderboard.db')
 }
 
+# Uncomment for local database
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.sqlite3',
+#         'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+#     }
+# }
+
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 MEDIA_URL = '/media/'
 
@@ -118,12 +125,13 @@ STATICFILES_DIRS = (
     os.path.join(BASE_DIR, "static"),
 )
 
-# security: http://django-secure.readthedocs.org/en/latest/index.html
+# security: https://docs.djangoproject.com/en/1.9/ref/middleware/#module-django.middleware.security
 SECURE_HSTS_SECONDS = 31536000 
 SECURE_HSTS_INCLUDE_SUBDOMAINS = True
 SECURE_FRAME_DENY = True
 SECURE_CONTENT_TYPE_NOSNIFF = True
 SECURE_BROWSER_XSS_FILTER = True
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 
 # security: https://django-csp.readthedocs.org/en/latest/configuration.html#policy-settings
 CSP_DEFAULT_SRC = ("'self'",)

@@ -21,50 +21,14 @@ class TimezoneMiddleware(object):
             else:
                 if "/settings" not in request.path and "/admin" not in request.path:
                     return redirect('/settings')
-                
-# Copyright (C) 2011 by Blade Polska s.c.
-# Full rights belong to Tomek Kopczuk (@tkopczuk).
-# www.askthepony.com
-# 
-# Permission is hereby granted, free of charge, to any person obtaining a copy
-# of this software and associated documentation files (the "Software"), to deal
-# in the Software without restriction, including without limitation the rights
-# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-# copies of the Software, and to permit persons to whom the Software is
-# furnished to do so, subject to the following conditions:
-# 
-# The above copyright notice and this permission notice shall be included in
-# all copies or substantial portions of the Software.
-# 
-# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-# AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-# THE SOFTWARE.
+            
+from django.conf import settings
+from django.http import HttpResponseRedirect
 
-class InstrumentMiddleware(object):
+class SSLMiddleware(object):
+
     def process_request(self, request):
-        if 'profile' in request.REQUEST:
-            request.profiler = cProfile.Profile()
-            request.profiler.enable()
- 
-    def process_response(self, request, response):
-        if hasattr(request, 'profiler'):
-            request.profiler.disable()
-            stamp = (request.META['REMOTE_ADDR'], datetime.now())
-            request.profiler.dump_stats('/tmp/%s-%s.pro' % stamp)
-            import pstats
-            stream = StringIO.StringIO()
-            stats = pstats.Stats('/tmp/%s-%s.pro' % stamp, stream=stream)
-            stats.strip_dirs()
-            stats.sort_stats('time')
-            stats.print_stats(12)
-            stats.print_callers(12)
-            stats.print_callees(12)
-            os.remove('/tmp/%s-%s.pro' % stamp)
-            response._container[0] += "<pre>"+stream.getvalue()+"</pre>"
-            stream.close()
-        return response
-    pass
+        if not any([settings.DEBUG, request.is_secure(), request.META.get("HTTP_X_FORWARDED_PROTO", "") == 'https']):
+            url = request.build_absolute_uri(request.get_full_path())
+            secure_url = url.replace("http://", "https://")
+            return HttpResponseRedirect(secure_url)

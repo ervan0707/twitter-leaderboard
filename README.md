@@ -7,7 +7,7 @@ Sample Django App that creates a leaderboard for a team's engagement and activit
 
 As always, when developing on top of the Twitter platform, you must abide by the [Developer Agreement & Policy](https://dev.twitter.com/overview/terms/agreement-and-policy). 
 
-[![Deploy](https://www.herokucdn.com/deploy/button.png)](https://heroku.com/deploy?template=https://github.com/ryankicks/twitter-leaderboard)
+[![Deploy](https://www.herokucdn.com/deploy/button.png)](https://heroku.com/deploy?template=https://github.com/twitterdev/twitter-leaderboard)
 
 Requirements
 ============
@@ -16,7 +16,6 @@ To run this sample code, you'll need to install the following libraries:
 
 - Python Social Auth (https://github.com/omab/python-social-auth)
 - Python Twitter (https://github.com/bear/python-twitter)
-- south (http://south.aeracode.org/)
 - Fabric (http://www.fabfile.org/)
 
 You can install these with the following command:
@@ -66,6 +65,9 @@ Deploying to Heroku is even easier.
 	- CONSUMER_SECRET
 	- ACCESS_TOKEN
 	- ACCESS_TOKEN_SECRET
+	- GNIP_PASSWORD
+	- GNIP_SEARCH_ENDPOINT
+	- GNIP_USERNAME
 	
 - After deploying, in the Twitter App config, ensure the Callback URL is `http://your-app-name.herokuapp.com/complete/twitter`
 
@@ -77,13 +79,11 @@ Deploying to Heroku is even easier.
 
 - To create an admin user, use the following Heroku CLI command:
 
-	`heroku run python manage.py shell --app your-app-name`
+	`heroku run python manage.py createsuperuser --username=USERNAME --email=EMAIL --app your-app-name`
 	
-Then query for your initial user and update their profile as follows:
+Then log in via the Admin console and update your initial Twitter login user accordingly. 
 
-	`heroku run python manage.py createsuperuser`
-
-[![Deploy](https://www.herokucdn.com/deploy/button.png)](https://heroku.com/deploy?template=https://github.com/ryankicks/twitter-leaderboard)
+[![Deploy](https://www.herokucdn.com/deploy/button.png)](https://heroku.com/deploy?template=https://github.com/twitterdev/twitter-leaderboard)
 
 
 NOTES
