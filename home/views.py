@@ -80,8 +80,7 @@ def home(request):
     
     if list_id:
 
-        list = api.GetList(list_id, None)
-        users = api.GetListMembers(list.id, list.slug)
+        users = api.GetListMembers(list_id, None)
 
         users_exclude = []
         if list_exclude_id:        
